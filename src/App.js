@@ -1,26 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+    constructor(){
+        super();
+        this.state = {
+            pokemon: {
+                name: '',
+                img: ''
+            }
+        }
+    }
+
+    componentDidMount() {
+      let rand = Math.floor(1 + Math.random() * 807);
+      fetch('https://pokeapi.co/api/v2/pokemon/'+ rand)
+          .then(data => data.json())
+          .then(data =>{
+             this.setState( {
+                  pokemon: {
+                      name: data.name,
+                      img: data.sprites.front_default
+                  }
+              })
+          })
+          .catch(() => [] );
+    }
+
+    render() {
+        const {name, img} = this.state.pokemon;
+        return (
+            <div className='pokemon'>
+                <img src={img} alt={name}/>
+                <h1>{name}</h1>
+            </div>
+        );
+    }
 }
 
 export default App;
